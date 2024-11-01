@@ -1,14 +1,10 @@
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-console.log('Current working directory:', __dirname);
-console.log('Trying to require routes/auth from:', require.resolve('./routes/auth'));
-const authRoutes = require('./routes/auth'); // Check this line
 
-const authRoutes = require('routes/auth');
-
-const productRoutes = require('routes/product');
-const cartRoutes = require('routes/cart');
-const authenticateToken = require('middleware/auths');
+const authRoutes = require('./routes/auth'); // Correctly import auth routes
+const productRoutes = require('./routes/product');
+const cartRoutes = require('./routes/cart');
+const authenticateToken = require('./middleware/auths');
 require('dotenv').config();
 const express = require('express');
 const cookieParser = require('cookie-parser');

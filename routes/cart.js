@@ -1,9 +1,9 @@
 // routes/cart.js
 const express = require('express');
 const router = express.Router();
-const authenticateToken = require('middleware/auths');
-const Cart = require('models/Cart');
-const Product = require('models/product');
+const authenticateToken = require('./middleware/auths');
+const Cart = require('./models/Cart');
+const Product = require('./models/product');
 
 // Add item to cart
 router.post('/add', authenticateToken, async (req, res) => {
