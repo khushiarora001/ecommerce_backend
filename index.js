@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
-const authRoutes = require('./routes/auth'); // Correctly import auth routes
-const productRoutes = require('./routes/product');
-const cartRoutes = require('./routes/cart');
-const authenticateToken = require('./middleware/auths');
+const authRoutes = require('routes/auth'); // Correctly import auth routes
+const productRoutes = require('routes/product');
+const cartRoutes = require('routes/cart');
+const authenticateToken = require('middleware/auths');
 require('dotenv').config();
 const express = require('express');
 const cookieParser = require('cookie-parser');
