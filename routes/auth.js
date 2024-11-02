@@ -8,35 +8,47 @@ const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET || 'your_secret_key_
 
 // Sign up route
 router.post('/signup', async (req, res) => {
-    const { username, password } = req.body;
+    const { username, password, email, phoneNumber } = req.body;
+
+    // Validate required fields
+    if (!username || !password || !email || !phoneNumber) {
+        return res.status(400).json({ message: 'All fields (username, password, email, phone number) are required' });
+    }
 
     try {
-        // Check if user already exists
-        const existingUser = await User.findOne({ username });
-        if (existingUser) return res.status(400).json({ message: 'Username already exists' });
+        // Check if user already exists by username or email
+        const existingUser = await User.findOne({ $or: [{ username }, { email }] });
+        if (existingUser) {
+            return res.status(400).json({ message: 'Username or email already exists' });
+        }
 
         // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Create a new user
+        // Create a new user with all fields
         const user = new User({
             username,
-            password: hashedPassword
+            password: hashedPassword,
+            email,
+            phoneNumber,
+            name
         });
 
         await user.save();
 
-        // Define the payload
+        // Define the payload for token
         const payload = {
             id: user._id,
-            username: user.username
+            username: user.username,
+            email: user.email
         };
 
         // Generate an access token
         const accessToken = jwt.sign(payload, ACCESS_TOKEN_SECRET, {
-            expiresIn: '1y'  // Token valid for 1 year
+            expiresIn: '1y' // Token valid for 1 year
         });
 
+        // Send success response
         res.status(201).json({
             message: 'User registered successfully',
             accessToken
@@ -46,6 +58,8 @@ router.post('/signup', async (req, res) => {
         res.status(500).json({ message: 'Server error', error });
     }
 });
+
+module.exports = router;
 
 // Login route
 router.post('/login', async (req, res) => {
